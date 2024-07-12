@@ -34,4 +34,4 @@ def seed_db():
     finally:
         db.close()
 
-# seed_db()
+seed_db()
