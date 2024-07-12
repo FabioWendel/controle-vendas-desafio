@@ -2,13 +2,21 @@ version: '3.8'
 
 services:
   backend:
-    build: .
+    build: ./backend
     ports:
       - "8000:8000"
     depends_on:
       - db
     environment:
       - DATABASE_URL=postgresql://user:2024@db:5432/ecommerce
+      - UPLOAD_DIR=app/image-upload
+    networks:
+      - ecommerce-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:4200"
     networks:
       - ecommerce-network
 
@@ -20,6 +28,7 @@ services:
       POSTGRES_DB: ecommerce
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - uploads_data:/app/image-upload
     ports:
       - "5432:5432"
     networks:
@@ -31,3 +40,4 @@ networks:
 
 volumes:
   postgres_data:
+  uploads_data:

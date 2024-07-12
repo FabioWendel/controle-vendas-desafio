@@ -34,6 +34,7 @@ def create_sale(sale: SaleCreate, db: Session = Depends(get_db), current_user: U
 
         db_sale.category = db_product.category
         db_sale.seller = db_product.seller
+        db_sale.date = db_sale.created_at 
 
 
         return db_sale
