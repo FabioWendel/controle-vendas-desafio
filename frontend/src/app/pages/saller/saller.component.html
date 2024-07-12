@@ -1,0 +1,290 @@
+<div class="card">
+  <div class="flex align-items-center justify-content-between mb-3 m-2">
+    <h2 class="text-primary">Vendedores</h2>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-plus"
+      label="Vendedor"
+      class="p-button-rounded p-button-success"
+      size="small"
+      (click)="showAddSellerDialog()"
+    ></button>
+  </div>
+</div>
+
+<div class="card rounded-custom">
+  <p-toast></p-toast>
+  <p-table
+    [value]="sellers"
+    dataKey="id"
+    editMode="row"
+    [loading]="loading"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 20%">Nome</th>
+        <th style="width: 20%">E-mail</th>
+        <th style="width: 20%">Senha</th>
+        <th style="width: 20%"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-user
+      let-editing="editing"
+      let-ri="rowIndex"
+      [formGroup]="sellerForm"
+    >
+      <tr [pEditableRow]="user">
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                formControlName="name"
+                [(ngModel)]="user.name"
+              />
+              <div
+                *ngIf="submitted && f['name'].errors"
+                class="flex align-items-center justify-content-start"
+              >
+                <small
+                  *ngIf="f['name'].errors['required']"
+                  id="name-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Nome é obrigatório.</small
+                >
+                <small
+                  *ngIf="f['name'].errors['maxlength']"
+                  id="name-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Nome deve ter apenas 100 caracteres.</small
+                >
+              </div>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ user.name }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                formControlName="email"
+                [(ngModel)]="user.email"
+              />
+              <div
+                *ngIf="submitted && f['email'].errors"
+                class="flex align-items-center justify-content-start"
+              >
+                <small
+                  *ngIf="f['email'].errors['required']"
+                  id="email-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >E-mail é obrigatório.</small
+                >
+                <small
+                  *ngIf="f['email'].errors['email']"
+                  id="email-invalid"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >E-mail inválido.</small
+                >
+              </div>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ user.email }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="password"
+                formControlName="password"
+                [(ngModel)]="user.password"
+              />
+              <div
+                *ngIf="submitted && f['password'].errors"
+                class="flex align-items-center justify-content-start"
+              >
+                <small
+                  *ngIf="f['password'].errors['minlength']"
+                  id="password-minlength"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >A senha deve ter pelo menos 6 caracteres.</small
+                >
+              </div>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ editing ? "" : "********" }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <div class="flex align-items-center justify-content-center gap-2">
+            <button
+              *ngIf="!editing && currentEditingRow === null"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(user, ri)"
+              class="p-button-rounded p-button-text"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(user)"
+              class="p-button-rounded p-button-text p-button-success mr-2"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel()"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+            <button
+              *ngIf="!editing && currentEditingRow === null"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDeleteUser(user)"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-container *ngIf="sellers.length === 0 && !loading">
+    <h4 class="flex align-items-center justify-content-center text-primary">
+      Não há vendedores cadastrados.
+    </h4>
+  </ng-container>
+
+  <p-dialog
+    header="Cadastrar Vendedor"
+    [(visible)]="displayAddSellerDialog"
+    [draggable]="false"
+    [resizable]="false"
+    modal="modal"
+  >
+    <form [formGroup]="sellerForm" (ngSubmit)="onAddSeller()">
+      <div class="p-fluid">
+        <div class="p-field mb-3">
+          <label for="name">Nome</label>
+          <input id="name" type="text" pInputText formControlName="name" />
+          <div
+            *ngIf="submitted && sellerForm.controls['name'].errors"
+            class="p-error"
+          >
+            <small *ngIf="sellerForm.controls['name'].errors['required']"
+              >Nome é obrigatório.</small
+            >
+            <small *ngIf="sellerForm.controls['name'].errors['maxlength']"
+              >Nome deve ter apenas 100 caracteres.</small
+            >
+          </div>
+        </div>
+        <div class="p-field mb-3">
+          <label for="email">E-mail</label>
+          <input id="email" type="text" pInputText formControlName="email" />
+          <div
+            *ngIf="submitted && sellerForm.controls['email'].errors"
+            class="p-error"
+          >
+            <small *ngIf="sellerForm.controls['email'].errors['required']"
+              >E-mail é obrigatório.</small
+            >
+            <small *ngIf="sellerForm.controls['email'].errors['email']"
+              >E-mail inválido.</small
+            >
+          </div>
+        </div>
+        <div class="p-field mb-3">
+          <label for="password">Senha</label>
+          <input
+            id="password"
+            type="password"
+            pInputText
+            formControlName="password"
+          />
+          <div
+            *ngIf="submitted && sellerForm.controls['password'].errors"
+            class="p-error"
+          >
+            <small *ngIf="sellerForm.controls['password'].errors['required']"
+              >Senha é obrigatória.</small
+            >
+            <small *ngIf="sellerForm.controls['password'].errors['minlength']"
+              >A senha deve ter pelo menos 6 caracteres.</small
+            >
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-content-end">
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          class="p-button-text"
+          (click)="hideAddSellerDialog()"
+        ></button>
+        <button
+          pButton
+          type="submit"
+          label="Cadastrar"
+          class="p-button-text p-button-success"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog
+    header="Confirmação de Exclusão"
+    [(visible)]="displayDeleteDialog"
+    [draggable]="false"
+    [resizable]="false"
+    modal="modal"
+  >
+    <p class="flex align-items-center justify-content-center">
+      Tem certeza que deseja excluir o vendedor ?
+    </p>
+    <p class="flex align-items-center justify-content-center">
+      {{ sellerToDelete?.name }} - {{ sellerToDelete?.email }}
+    </p>
+    <div class="flex justify-content-end">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-text"
+        (click)="hideDeleteDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Confirmar"
+        class="p-button-text p-button-danger"
+        (click)="deleteUser()"
+      ></button>
+    </div>
+  </p-dialog>
+</div>

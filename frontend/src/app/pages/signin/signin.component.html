@@ -1,0 +1,78 @@
+<div class="flex align-items-center justify-content-center h-screen">
+  <p-card header="Login" subheader="">
+    <form [formGroup]="loginForm" id="loginForm" (ngSubmit)="onSubmit()">
+      <div class="flex flex-column">
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-user"></i>
+          <input
+            id="email"
+            formControlName="username"
+            type="text"
+            pInputText
+            placeholder="E-mail"
+          />
+        </span>
+        <div
+          *ngIf="submitted && f['username'].errors"
+          class="flex align-items-center justify-content-start"
+        >
+          <small
+            *ngIf="f['username'].errors['required']"
+            id="username-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >E-mail é obrigatório.</small
+          >
+          <small
+            *ngIf="f['username'].errors['email']"
+            id="username-invalid"
+            class="p-error block flex align-items-center justify-content-end"
+            >E-mail inválido.</small
+          >
+        </div>
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-key"></i>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            pInputText
+            placeholder="Senha"
+          />
+        </span>
+        <div
+          *ngIf="submitted && f['password'].errors"
+          class="flex align-items-center justify-content-start"
+        >
+          <small
+            *ngIf="f['password'].errors['required']"
+            id="passwword-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >A senha é obrigatório.</small
+          >
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="flex align-items-center justify-content-center">
+        <button
+          pButton
+          type="submit"
+          form="loginForm"
+          label="Entrar"
+          [loading]="loading"
+          class="w-full"
+        ></button>
+      </div>
+      <p-divider />
+      <div class="flex align-items-center justify-content-center">
+        <p-button
+          label="Inscrever-se"
+          [link]="true"
+          [routerLink]="['/signup']"
+          size="small"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+<p-toast></p-toast>

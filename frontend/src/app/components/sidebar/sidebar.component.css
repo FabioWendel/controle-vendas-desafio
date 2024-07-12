@@ -1,0 +1,15 @@
+.active .font-medium {
+    color: #007ad9;
+    font-weight: bold;
+    text-decoration: none;
+    text-decoration-line: none;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .active i {
+    color: #007ad9;
+  }

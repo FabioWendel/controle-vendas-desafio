@@ -1,0 +1,113 @@
+<div
+  class="register-background flex align-items-center justify-content-center h-screen"
+>
+  <p-card header="Registrar" subheader="">
+    <form [formGroup]="signupForm" id="signupForm" (ngSubmit)="onSubmit()">
+      <div class="flex flex-column">
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-user"></i>
+          <input
+            id="name"
+            formControlName="name"
+            type="text"
+            pInputText
+            placeholder="Nome"
+          />
+        </span>
+        <div
+          *ngIf="submitted && f['name'].errors"
+          class="flex align-items-center justify-content-start"
+        >
+          <small
+            *ngIf="f['name'].errors['required']"
+            id="name-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >Nome é obrigatório.</small
+          >
+          <small
+            *ngIf="f['name'].errors['maxlength']"
+            id="name-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >Nome deve ter apenas 100 caracteres.</small
+          >
+        </div>
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-envelope"></i>
+          <input
+            id="email"
+            formControlName="email"
+            type="text"
+            pInputText
+            placeholder="E-mail"
+          />
+        </span>
+        <div
+          *ngIf="submitted && f['email'].errors"
+          class="flex align-items-center justify-content-start"
+        >
+          <small
+            *ngIf="f['email'].errors['required']"
+            id="email-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >E-mail é obrigatório.</small
+          >
+          <small
+            *ngIf="f['email'].errors['email']"
+            id="email-invalid"
+            class="p-error block flex align-items-center justify-content-end"
+            >E-mail inválido.</small
+          >
+        </div>
+        <span class="p-input-icon-left my-2">
+          <i class="pi pi-key"></i>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            pInputText
+            placeholder="Senha"
+          />
+        </span>
+        <div
+          *ngIf="submitted && f['password'].errors"
+          class="flex align-items-center justify-content-start"
+        >
+          <small
+            *ngIf="f['password'].errors['required']"
+            id="password-help"
+            class="p-error block flex align-items-center justify-content-end"
+            >A senha é obrigatória.</small
+          >
+          <small
+            *ngIf="f['password'].errors['minlength']"
+            id="password-minlength"
+            class="p-error block flex align-items-center justify-content-end"
+            >A senha deve ter pelo menos 6 caracteres.</small
+          >
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="flex align-items-center justify-content-center">
+        <button
+          pButton
+          type="submit"
+          form="signupForm"
+          label="Registrar"
+          [loading]="loading"
+          class="w-full"
+        ></button>
+      </div>
+      <p-divider />
+      <div class="flex align-items-center justify-content-center">
+        <p-button
+          label="Login"
+          [link]="true"
+          [routerLink]="['/signin']"
+          size="small"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+<p-toast></p-toast>

@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import 'primeflex/primeflex.scss';
+
+:root {
+html,
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: rgba(0, 0, 255, 0.1);
+  color: var(--primary-color-text);
+}}

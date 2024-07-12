@@ -1,0 +1,251 @@
+<div class="card">
+  <div class="flex align-items-center justify-content-between mb-3 m-2">
+    <h2 class="text-primary">Categorias</h2>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-plus"
+      label="Categoria"
+      class="p-button-rounded p-button-success"
+      size="small"
+      (click)="showAddCategoryDialog()"
+    ></button>
+  </div>
+</div>
+
+<div class="card rounded-custom">
+  <p-toast></p-toast>
+  <p-table
+    [value]="categories"
+    dataKey="id"
+    editMode="row"
+    [loading]="loading"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 40%">Nome</th>
+        <th style="width: 40%">Descrição</th>
+        <th style="width: 20%"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template
+      pTemplate="body"
+      let-category
+      let-editing="editing"
+      let-ri="rowIndex"
+      [formGroup]="categoryForm"
+    >
+      <tr [pEditableRow]="category">
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                formControlName="name"
+                [(ngModel)]="category.name"
+              />
+              <div
+                *ngIf="submitted && f['name'].errors"
+                class="flex align-items-center justify-content-start"
+              >
+                <small
+                  *ngIf="f['name'].errors['required']"
+                  id="name-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Nome é obrigatório.</small
+                >
+                <small
+                  *ngIf="f['name'].errors['maxlength']"
+                  id="name-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Nome deve ter apenas 100 caracteres.</small
+                >
+              </div>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ category.name }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                formControlName="description"
+                [(ngModel)]="category.description"
+              />
+              <div
+                *ngIf="submitted && f['description'].errors"
+                class="flex align-items-center justify-content-start"
+              >
+                <small
+                  *ngIf="f['description'].errors['required']"
+                  id="description-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Descrição é obrigatória.</small
+                >
+                <small
+                  *ngIf="f['description'].errors['maxlength']"
+                  id="description-help"
+                  class="p-error block flex align-items-center justify-content-end"
+                  >Descrição deve ter apenas 500 caracteres.</small
+                >
+              </div>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ category.description }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <div class="flex align-items-center justify-content-center gap-2">
+            <button
+              *ngIf="!editing && currentEditingRow === null"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(category, ri)"
+              class="p-button-rounded p-button-text"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(category)"
+              class="p-button-rounded p-button-text p-button-success mr-2"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel()"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+            <button
+              *ngIf="!editing && currentEditingRow === null"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDeleteCategory(category)"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-container *ngIf="categories.length === 0 && !loading">
+    <h4 class="flex align-items-center justify-content-center text-primary">
+      Não há categorias cadastradas.
+    </h4>
+  </ng-container>
+
+  <p-dialog
+    header="Cadastrar Categoria"
+    [(visible)]="displayAddCategoryDialog"
+    [draggable]="false"
+    [resizable]="false"
+    modal="modal"
+  >
+    <form [formGroup]="categoryForm" (ngSubmit)="onAddCategory()">
+      <div class="p-fluid">
+        <div class="p-field mb-3">
+          <label for="name">Nome</label>
+          <input id="name" type="text" pInputText formControlName="name" />
+          <div
+            *ngIf="submitted && categoryForm.controls['name'].errors"
+            class="p-error"
+          >
+            <small *ngIf="categoryForm.controls['name'].errors['required']"
+              >Nome é obrigatório.</small
+            >
+            <small *ngIf="categoryForm.controls['name'].errors['maxlength']"
+              >Nome deve ter apenas 100 caracteres.</small
+            >
+          </div>
+        </div>
+        <div class="p-field mb-3">
+          <label for="description">Descrição</label>
+          <input
+            id="description"
+            type="text"
+            pInputText
+            formControlName="description"
+          />
+          <div
+            *ngIf="submitted && categoryForm.controls['description'].errors"
+            class="p-error"
+          >
+            <small
+              *ngIf="categoryForm.controls['description'].errors['required']"
+              >Descrição é obrigatória.</small
+            >
+            <small
+              *ngIf="categoryForm.controls['description'].errors['maxlength']"
+              >Descrição deve ter apenas 500 caracteres.</small
+            >
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-content-end">
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          class="p-button-text"
+          (click)="hideAddCategoryDialog()"
+        ></button>
+        <button
+          pButton
+          type="submit"
+          label="Cadastrar"
+          class="p-button-text p-button-success"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog
+    header="Confirmação de Exclusão"
+    [(visible)]="displayDeleteDialog"
+    [draggable]="false"
+    [resizable]="false"
+    modal="modal"
+  >
+    <p class="flex align-items-center justify-content-center">
+      Tem certeza que deseja excluir a categoria?
+    </p>
+    <p class="flex align-items-center justify-content-center">
+      {{ categoryToDelete?.name }} - {{ categoryToDelete?.description }}
+    </p>
+    <div class="flex justify-content-end">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-text"
+        (click)="hideDeleteDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Confirmar"
+        class="p-button-text p-button-danger"
+        (click)="deleteCategory()"
+      ></button>
+    </div>
+  </p-dialog>
+</div>

@@ -1,0 +1,43 @@
+<div class="grid">
+  <div class="col-6">
+    <p-panel header="Histórico de Vendas">
+      <p-table [value]="salesHistory" [tableStyle]="{ height: '250px' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Data de Venda</th>
+            <th>Nome do Produto</th>
+            <th>Cliente</th>
+            <th>Vendedor</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sale>
+          <tr>
+            <td>{{ sale.date | date : "dd/MM/yyyy" }}</td>
+            <td>{{ sale.productName }}</td>
+            <td>{{ sale.customer }}</td>
+            <td>{{ sale.seller }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+  <div class="col-6">
+    <p-panel header="Vendas por Categorias">
+      <p-chart
+        type="doughnut"
+        [data]="salesCategoriesData"
+        height="250"
+        width="250"
+      ></p-chart>
+    </p-panel>
+  </div>
+  <div class="col-12">
+    <p-panel header="Produtos mais Vendidos">
+      <p-chart
+        type="bar"
+        [data]="bestSellingProductsData"
+        height="250"
+      ></p-chart>
+    </p-panel>
+  </div>
+</div>

@@ -1,0 +1,250 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-dataView
+    #dv
+    [value]="products"
+    [layout]="layout"
+    [emptyMessage]="'Não há produtos cadastrados.'"
+  >
+    <ng-template pTemplate="header">
+      <div class="flex justify-content-end">
+        <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="list" let-products>
+      <div class="grid grid-nogutter">
+        <div
+          class="col-12"
+          *ngFor="let item of products; let first = first"
+          class="col-12"
+        >
+          <div
+            class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
+            [ngClass]="{ 'border-top-1 surface-border': !first }"
+          >
+            <div class="md:w-10rem relative">
+              <img
+                class="block xl:block mx-auto border-round w-full"
+                [src]="getImage(item.image)"
+                [alt]="item.name"
+              />
+              <p-tag
+                [value]="getSeverityTitle(item)"
+                [severity]="getSeverity(item)"
+                class="absolute"
+                [style.left.px]="4"
+                [style.top.px]="4"
+              />
+            </div>
+            <div
+              class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4"
+            >
+              <div
+                class="flex flex-row md:flex-column justify-content-between align-items-start gap-2"
+              >
+                <div>
+                  <span class="font-medium text-secondary text-sm">{{
+                    item?.category?.name
+                  }}</span>
+                  <div class="text-lg font-medium text-900 mt-2">
+                    {{ item.name }}
+                  </div>
+                  <div class="text-secondary mt-1">{{ item.description }}</div>
+                </div>
+                <div class="surface-100 p-1" style="border-radius: 30px">
+                  <div
+                    class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
+                    style="
+                      border-radius: 30px;
+                      box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04),
+                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+                    "
+                  >
+                    <span class="text-900 font-medium text-sm">{{
+                      item.stock_quantity
+                    }}</span>
+                    <i class="pi pi-box"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-column md:align-items-end gap-5">
+                <span class="text-xl font-semibold text-900">{{
+                  "R$ " + item.price
+                }}</span>
+                <div class="flex flex-row-reverse md:flex-row gap-2">
+                  <p-button
+                    icon="pi pi-shopping-cart"
+                    class="flex-auto md:flex-initial whitespace-nowrap"
+                    label="Comprar"
+                    [disabled]="validInput(item)"
+                    (onClick)="openConfirmationDialog(item)"
+                  ></p-button>
+                  <p-inputNumber
+                    [size]="1"
+                    [disabled]="item.stock_quantity === 0"
+                    [inputStyle]="{ 'text-align': 'center' }"
+                    [showButtons]="true"
+                    buttonLayout="horizontal"
+                    spinnerMode="horizontal"
+                    inputId="horizontal"
+                    mode="decimal"
+                    [min]="1"
+                    decrementButtonClass="p-button-outlined"
+                    incrementButtonClass="p-button-outlined"
+                    incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus"
+                    [(ngModel)]="item.qtdProduct"
+                  ></p-inputNumber>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template let-product pTemplate="grid" let-products>
+      <div class="grid grid-nogutter">
+        <div
+          class="col-12 sm:col-6 md:col-4 xl:col-6 p-2"
+          *ngFor="let product of products"
+        >
+          <div
+            class="p-4 border-1 surface-border surface-card border-round flex flex-column"
+          >
+            <div
+              class="surface-50 flex justify-content-center border-round p-3"
+            >
+              <div class="relative mx-auto">
+                <img
+                  class="border-round w-full"
+                  [src]="getImage(product.image)"
+                  [alt]="product.name"
+                  width="200"
+                  height="200"
+                />
+                <p-tag
+                  [value]="getSeverityTitle(product)"
+                  [severity]="getSeverity(product)"
+                  class="absolute"
+                  [style.left.px]="4"
+                  [style.top.px]="4"
+                />
+              </div>
+            </div>
+            <div class="pt-4">
+              <div
+                class="flex flex-row justify-content-between align-items-start gap-2"
+              >
+                <div>
+                  <span class="font-medium text-secondary text-sm">{{
+                    product?.category?.name
+                  }}</span>
+                  <div class="text-lg font-medium text-900 mt-1">
+                    {{ product.name }}
+                  </div>
+                  <div class="text-secondary mt-1">
+                    {{ product.description }}
+                  </div>
+                </div>
+                <div class="surface-100 p-1" style="border-radius: 30px">
+                  <div
+                    class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
+                    style="
+                      border-radius: 30px;
+                      box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04),
+                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+                    "
+                  >
+                    <span class="text-900 font-medium text-sm">{{
+                      product.stock_quantity
+                    }}</span>
+                    <i class="pi pi-box"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-column gap-4 mt-4">
+                <span class="text-2xl font-semibold">{{
+                  "R$ " + product.price
+                }}</span>
+                <div
+                  class="flex gap-2 items-center align-items-center justify-content-start"
+                >
+                  <p-button
+                    icon="pi pi-shopping-cart"
+                    class="flex-auto md:flex-initial whitespace-nowrap"
+                    label="Comprar"
+                    [disabled]="validInput(product)"
+                    (onClick)="openConfirmationDialog(product)"
+                  ></p-button>
+                  <p-inputNumber
+                    [size]="1"
+                    [disabled]="product.stock_quantity === 0"
+                    [inputStyle]="{ 'text-align': 'center' }"
+                    [showButtons]="true"
+                    buttonLayout="horizontal"
+                    spinnerMode="horizontal"
+                    inputId="horizontal"
+                    mode="decimal"
+                    [min]="1"
+                    decrementButtonClass="p-button-outlined"
+                    incrementButtonClass="p-button-outlined"
+                    incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus"
+                    [(ngModel)]="product.qtdProduct"
+                  ></p-inputNumber>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  <p-dialog
+    header="Confirmação de Compra"
+    [(visible)]="displayConfirmationDialog"
+    [modal]="true"
+    [closable]="true"
+  >
+    <ng-container *ngIf="selectedProduct">
+      <div class="p-grid p-fluid">
+        <div class="p-col-12">
+          <img
+            [src]="getImage(selectedProduct.image)"
+            alt="{{ selectedProduct.name }}"
+            class="w-full"
+          />
+        </div>
+        <div class="p-col-12">
+          <div class="text-lg font-medium">{{ selectedProduct.name }}</div>
+          <div class="text-secondary">{{ selectedProduct.description }}</div>
+        </div>
+        <div class="p-col-12">
+          <div class="flex justify-content-between align-items-center">
+            <div class="text-secondary">
+              Quantidade: {{ selectedProduct.qtdProduct }}
+            </div>
+            <div class="text-900 font-semibold">
+              {{ "R$ " + +selectedProduct.price * selectedProduct.qtdProduct }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-content-center mt-4">
+        <button
+          pButton
+          label="Cancelar"
+          class="p-button-text mr-3"
+          (click)="cancelPurchase()"
+        ></button>
+        <button
+          pButton
+          label="Comprar"
+          class="p-button p-button-success"
+          (click)="confirmPurchase()"
+        ></button>
+      </div>
+    </ng-container>
+  </p-dialog>
+</div>
