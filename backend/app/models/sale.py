@@ -6,9 +6,9 @@ class Sale(Base):
     __tablename__ = "sales"
 
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey('products.id'))
-    user_id = Column(Integer, ForeignKey('users.id'))
-    seller_id = Column(Integer, ForeignKey('sellers.id'))
+    product_id = Column(Integer, ForeignKey('products.id', ondelete='CASCADE'))
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    seller_id = Column(Integer, ForeignKey('sellers.id', ondelete='CASCADE'))
     quantity = Column(Integer, nullable=False)
     total_price = Column(Float, nullable=False)
     product = relationship("Product")
